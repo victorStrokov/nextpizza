@@ -1,0 +1,241 @@
+generator client { // генерируем  схему для js 
+    provider = "prisma-client-js"
+}
+
+
+datasource db {
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+// таблица 
+model User {
+    id Int @id @default(autoincrement()) // id Int -число @id - уникальный идентификатор @default(autoincrement()) автаматически прибаляет к id предыдущего пользвателя  + 1
+
+    fullName String
+    email    String    @unique //@unique делает поле уникальным 
+    password String
+    role     UserRole  @default(USER) // из enum UserRole @default(USER) по умолчанию обычный пользователь при создании
+    verified DateTime? // время когда пользователь подтвержден
+
+    provider   String? // опционально  какя социальная сеть привязана к этому пользователю их может быть несколько может не быть если регистрация в ручную email password
+    providerId String? // опционально Id какой соцсетью пользователь авторизовался
+
+    cart             Cart? // карзина пользователя связь с Cart если у пользователя есть своя карзина
+    orders           Order[] // заказы пользователя их может быть много связь с Order
+    verificationCode VerificationCode? // связь с VerificationCode один код для одного пользователя 
+
+    createdAt DateTime @default(now())  // время создания пользователя
+    updatedAt DateTime @updatedAt // время изменения пользователя 
+}
+
+model Category {
+    id       Int       @id @default(autoincrement())
+    name     String    @unique
+    products Product[] //связь one to many у категории есть множество продуктов Category to Product 
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Product {
+    id Int @id @default(autoincrement())
+
+    name     String
+    imageUrl String
+
+    ingredients Ingredient[] // связь указывает что у одного продукта может быть множество ингридиентов
+    items       ProductItem[] // связь продуктов с вариантами продуктов ProductItem
+
+    category   Category @relation(fields: [categoryId], references: [id]) // связь Product с Category many to one это для js
+    categoryId Int // это для базы данных
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model ProductItem {
+    id Int @id @default(autoincrement())
+
+    price     Int
+    size      Int? // может и не быть размера 
+    pizzaType Int?
+
+    cartItems CartItem[] // связь у ProductItem есть  CartItem
+
+    product   Product @relation(fields: [productId], references: [id]) // связь вариантов прподуктов с продуктами
+    productId Int
+
+     createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Ingredient {
+    id Int @id @default(autoincrement())
+
+    name     String
+    price    Int
+    imageUrl String
+
+    products  Product[] // связь ингридиентов с продуктами
+    cartItems CartItem[] // связь Ingredient с CartItem
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Cart {
+    id Int @id @default(autoincrement())
+
+    user   User? @relation(fields: [userId], references: [id]) // карзина пренадлежит пользователю и у каждого пользователя может быть только одна карзина но пользователя может и не быть User как и карзины у пользователя ?
+    userId Int?  @unique // уникальное поле
+
+    items CartItem[] // у карзины есть множество CartItem
+
+    token String // для получения карзины пользователем который не имеет аккаунта привязхываем токен всегда 
+
+    totalAmount Int @default(0) // цена карзины
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model CartItem {
+    id Int @id @default(autoincrement())
+
+    cart   Cart @relation(fields: [cartId], references: [id]) // связь с карзиной
+    cartId Int // у CartItem только одна карзина 
+
+    productItem   ProductItem @relation(fields: [productItemId], references: [id]) // связь с товарами
+    productItemId Int
+
+    quantity Int @default(1) // количество продуктов в карзине
+
+    ingredients Ingredient[] // какие еще ингредиенты добавить к заказу
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Order {// модель обьясняет что мы создаем заказ в базе данных что бы знать какие заказы создавали пользователи
+    id Int @id @default(autoincrement())
+
+    user   User? @relation(fields: [userId], references: [id]) // отображает есть ли пользователь у заказ
+    userId Int?
+
+    token String // какой токен у пользователя авторизованный или нет 
+
+    totalAmount Int // стоимость заказа 
+    status      OrderStatus // статус заказа по enum
+    paymentId   String? // идентификатор оплаты от платежной системы 
+
+    items Json // список товаров в самой карзине 
+
+    fullName String // информация о получателе заказа comment phone email address
+    email    String
+    phone    String
+    address  String
+    comment  String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model VerificationCode {
+    id Int @id @default(autoincrement()) // высылаемый код верификации пользователя по тел или почте в нашем случае это не важно но он есть 
+
+    user   User @relation(fields: [userId], references: [id])
+    userId Int  @unique // это поле уникально
+
+    code String //@unique сам код
+
+    createdAt DateTime @default(now())
+
+    @@unique([userId, code])// в момент создания проверяем уникальность userId code коды могут быть одинаковые но userId должны быть разные
+}
+
+model Story {
+    id              Int    @id @default(autoincrement())
+    previewImageUrl String
+
+    items StoryItem[]
+
+    createdAt DateTime @default(now())
+}
+
+model StoryItem {
+    id Int @id @default(autoincrement())
+
+    storyId Int
+    story   Story @relation(fields: [storyId], references: [id])
+
+    sourceUrl String
+
+    createdAt DateTime @default(now())
+}
+
+enum OrderStatus {// статусы заказа в Order 
+    PENDING
+    SUCCEEDED
+    CANCELLED
+}
+
+enum UserRole {//  кто админ или пользователь
+    USER
+    ADMIN
+}
+ 
+
+
+
+
+
+    
+
+
+
+
+
+
+   
+
+
+
+
+
+
+    
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
