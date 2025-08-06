@@ -9,10 +9,10 @@ import { signIn } from 'next-auth/react';
 interface Props {
   className?: string;
   onSubmit?: (data: any) => void;
-  onClouse?: VoidFunction;
+  onClose?: VoidFunction;
 }
 
-export const LoginForm: React.FC<Props> = ({ onClouse }) => {
+export const LoginForm: React.FC<Props> = ({ onClose }) => {
   const form = useForm<TFormLoginValues>({
     resolver: zodResolver(formLoginSchema),
     defaultValues: {
@@ -33,7 +33,7 @@ export const LoginForm: React.FC<Props> = ({ onClouse }) => {
           icon: '❌',
         });
       }
-      onClouse?.();
+      onClose?.();
       toast.success('Вы успешно вошли в аккаунт!', { icon: '✅' });
     } catch (error) {
       console.error('Error [LOGIN] form:', error);
