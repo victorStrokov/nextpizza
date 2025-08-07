@@ -29,15 +29,17 @@ export const LoginForm: React.FC<Props> = ({ onClose }) => {
       });
 
       if (!resp?.ok) {
-        toast.error('Ошибка при входе в аккаунт. Проверьте введенные данные.', {
-          icon: '❌',
-        });
+        throw Error();
       }
+
+      toast.success('Вы успешно вошли в аккаунт', {
+        icon: '✅',
+      });
+
       onClose?.();
-      toast.success('Вы успешно вошли в аккаунт!', { icon: '✅' });
     } catch (error) {
-      console.error('Error [LOGIN] form:', error);
-      toast.error('Ошибка при отправке формы. Неудалось войти в аккаунт.', {
+      console.error('Error [LOGIN]', error);
+      toast.error('Не удалось войти в аккаунт', {
         icon: '❌',
       });
     }
