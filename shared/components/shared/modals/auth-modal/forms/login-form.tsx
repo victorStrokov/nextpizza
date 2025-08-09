@@ -59,13 +59,13 @@ export const LoginForm: React.FC<Props> = ({ onClose }) => {
             <p className='text-gray-400'>
               Введите свою почту, чтобы войти в аккаунт
             </p>
-            <img
-              src='/assets/images/phone-icon.png'
-              width={60}
-              height={60}
-              alt='phone-icon'
-            />
           </div>
+          <img
+            src='/assets/images/phone-icon.png'
+            width={60}
+            height={60}
+            alt='phone-icon'
+          />
         </div>
 
         <FormInput
