@@ -148,7 +148,7 @@ model VerificationCode {
     user   User @relation(fields: [userId], references: [id])
     userId Int  @unique // это поле уникально
 
-    code String //@unique сам код
+    code String // сам код
 
     createdAt DateTime @default(now())
 

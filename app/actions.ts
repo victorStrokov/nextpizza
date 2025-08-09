@@ -2,12 +2,16 @@
 
 import { prisma } from '@/prisma/prisma-client';
 import { PayOrderTemplate } from '@/shared/components';
+import { VerificationUserTemplate } from '@/shared/components/shared/email-templates/verification-user';
 
 import { CheckoutFormValues } from '@/shared/constants';
 import { createPayment, sendEmail } from '@/shared/lib';
-import { OrderStatus } from '@prisma/client';
+import { getUserSession } from '@/shared/lib/get-user-sesion';
+import { OrderStatus, Prisma } from '@prisma/client';
+import { hashSync } from 'bcryptjs';
 import { cookies } from 'next/headers';
 
+// создание нового заказа
 export async function createOrder(data: CheckoutFormValues) {
   try {
     const cookiesStore = cookies(); // получаем куки сервера с помощью спуцифльной функци
@@ -112,6 +116,85 @@ export async function createOrder(data: CheckoutFormValues) {
     return paymentUrl; // возвращаем ссылку для оплаты заказа
   } catch (error) {
     console.log('[CreateOrder] Server error', error);
+  }
+}
+
+// обновление информации о пользователе
+export async function updateUserInfo(body: Prisma.UserUpdateInput) {
+  try {
+    const currentUser = await getUserSession(); // получаем текущего пользователя из сессии
+    if (!currentUser) {
+      // проверка на наличие текущего пользователя
+      throw new Error('Пользователь не найден!');
+    }
+
+    const findUser = await prisma.user.findFirst({
+      where: {
+        id: Number(currentUser.id),
+      },
+    });
+
+    await prisma.user.update({
+      where: {
+        // берем тот id который был получен из сессии
+        id: Number(currentUser.id),
+      },
+      data: {
+        fullName: body.fullName,
+        email: body.email,
+        password: body.password
+          ? hashSync(body.password as string, 10)
+          : findUser?.password, // если пароль не указан, то оставляем старый
+      },
+    });
+  } catch (error) {
+    console.log('Error [UPDATE_USER]', error);
+    throw error;
+  }
+}
+
+// регистрация нового пользователя
+export async function registerUser(body: Prisma.UserCreateInput) {
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        email: body.email,
+      },
+    });
+
+    if (user) {
+      if (user.verified) {
+        throw new Error('Почта не подтверждена');
+      }
+
+      throw new Error('Пользователь с таким email не существует');
+    }
+    //  если пользователь не найден, то создаем нового
+    const createdUser = await prisma.user.create({
+      data: {
+        fullName: body.fullName,
+        email: body.email,
+        password: hashSync(body.password, 10),
+      },
+    });
+
+    const code = Math.floor(100000 + Math.random() * 900000).toString(); // генерируем 6-значный код
+
+    await prisma.verificationCode.create({
+      data: {
+        code,
+        userId: createdUser.id, // кому передаем код , толькочто созданному пользователю
+      },
+    });
+
+    await sendEmail(
+      createdUser.email,
+      'Next Pizza / Подтверждение регистрации',
+      VerificationUserTemplate({ code })
+    );
+  } catch (error) {
+    console.log('Error [REGISTER_USER]', error);
+    throw error;
   }
 }
 //  test  console.log(data);
