@@ -17,9 +17,12 @@ import { cn } from '@/shared/lib/utils';
 import { createOrder } from '@/app/actions';
 import toast from 'react-hot-toast';
 import React from 'react';
+import { useSession } from 'next-auth/react';
+import { Api } from '@/shared/services/api-client';
 
 export default function CheckoutPage() {
   const [submitting, setSubmitting] = React.useState(false);
+  const { data: session } = useSession();
   const { totalAmount, items, updateItemQuantity, removeCartItem, loading } =
     useCart();
   const onClickCountButton = (
@@ -43,6 +46,21 @@ export default function CheckoutPage() {
       comment: '',
     },
   });
+
+  // отслеживаем изменения сессии и вшиваем данные авторизованного пользователя в поля оформления заказа
+  React.useEffect(() => {
+    // ф-ия обновляет форму и
+    async function fetchUserInfo() {
+      const data = await Api.auth.getMe();
+      const [firstName, lastName] = data.fullName.split(' '); // разбивает fullName на имя и фамилию  с пробелом
+      form.setValue('firstName', firstName);
+      form.setValue('lastName', lastName);
+      form.setValue('email', data.email);
+    }
+    if (session) {
+      fetchUserInfo();
+    }
+  }, [form, session]);
 
   const onSubmit = async (data: CheckoutFormValues) => {
     try {
