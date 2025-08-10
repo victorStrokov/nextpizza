@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(req: NextRequest) {
   try {
     const code = req.nextUrl.searchParams.get('code');
+    //const code = '';
     // если код не передан
     if (!code) {
       return NextResponse.json({ error: 'Код не верный' }, { status: 400 });
@@ -38,5 +39,6 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error(error);
     console.log('[VERIFY_GET]', error);
+    return NextResponse.json({ error: 'Ошибка сервера' }, { status: 500 });
   }
 }

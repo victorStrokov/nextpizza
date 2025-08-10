@@ -11,8 +11,6 @@ import toast from 'react-hot-toast';
 import { CartButton } from './cart-button';
 import { ProfileButton } from './profile-button';
 import { AuthModal } from './modals';
-// import { ProfileButton } from './profile-button';
-// import { AuthModal } from './modals';
 
 interface Props {
   hasSearch?: boolean;
