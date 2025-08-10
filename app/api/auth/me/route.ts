@@ -1,10 +1,14 @@
 import { prisma } from '@/prisma/prisma-client';
-import { getUserSession } from '@/shared/lib/get-user-sesion';
+import { authOptions } from '@/shared/constants/auth-options';
+import { getServerSession } from 'next-auth/next';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export const dynamic = 'force-dynamic'; // чтобы не кэшировался запрос
+
+export async function GET(req: any, res: any) {
   try {
-    const user = await getUserSession(); // проверяем авторизацию
+    const user = await getServerSession(req, res, authOptions); // проверяем авторизацию
+
     if (!user) {
       return NextResponse.json(
         { message: '[USER_GET] Пользователь не авторизован' },
@@ -14,7 +18,7 @@ export async function GET() {
     // если сессия вернула пользователя находим его по id
     const data = await prisma.user.findUnique({
       where: {
-        id: Number(user.id),
+        id: Number(user.user.id),
       },
       // вытаскиваем из базы данных его данные
       select: {
