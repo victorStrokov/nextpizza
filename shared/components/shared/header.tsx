@@ -52,19 +52,21 @@ export const Header: React.FC<Props> = ({
 
   return (
     <header className={cn('border-b', className)}>
-      <Container className='flex items-center justify-between py-8'>
+      <Container className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between py-4 px-4'>
         {/* Левая часть */}
         <Link href='/'>
           <div className='flex items-center gap-4'>
             <Image
               src='/logo.png'
               alt='Logo'
-              width={35}
-              height={35}
+              width={30}
+              height={30}
             />
             <div>
-              <h1 className='text-2xl uppercase font-black'>Next Pizza</h1>
-              <p className='text-sm text-gray-400 leading-3'>
+              <h1 className='text-xl sm:text-2xl uppercase font-black'>
+                Next Pizza
+              </h1>
+              <p className='text-xs sm:text-sm text-gray-400 leading-3'>
                 вкусней уже некуда
               </p>
             </div>
@@ -72,13 +74,13 @@ export const Header: React.FC<Props> = ({
         </Link>
 
         {hasSearch && ( // если страница checkout то убираем поиск
-          <div className='mx-10 flex-1'>
+          <div className='w-full sm:w-auto'>
             <SearchInput />
           </div>
         )}
 
         {/* Правая часть */}
-        <div className='flex items-center gap-3'>
+        <div className='flex gap-2 items-center justify-end'>
           <AuthModal
             open={openAuthModal}
             onClose={() => setOpenAuthModal(false)}

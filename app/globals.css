@@ -11,6 +11,11 @@ html {
     scroll-behavior: auto;
   }
 }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 @layer base {
   :root {
@@ -93,4 +98,12 @@ html {
 
 #nprogress .spinner-icon {
   @apply border-t-primary border-l-primary !important;
+}
+
+@layer components {
+  .container {
+    max-width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

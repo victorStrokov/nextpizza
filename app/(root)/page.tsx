@@ -18,9 +18,9 @@ export default async function Home({
 
   return (
     <>
-      <Container className='mt-10'>
+      <Container className='mt-10 px-4'>
         <Title
-          text='Все пиццы'
+          text='Все продукты'
           size='lg'
           className='font-extrabold'
         />
@@ -38,16 +38,16 @@ export default async function Home({
       <Stories />
 
       <Container className='mt-10 pb-14'>
-        <div className='flex gap-[80px]'>
+        <div className='flex flex-col lg:flex-row gap-6 min-w-0'>
           {/* Фильтрация */}
-          <div className='w-[250px]'>
+          <div className='lg:w-[250px] w-full shrink-0'>
             <Suspense>
               <Filters />
             </Suspense>
           </div>
 
           {/* Список товаров */}
-          <div className='flex-1'>
+          <div className='flex-1  min-w-0'>
             <div className='flex flex-col gap-16'>
               {categories.map(
                 (category) =>

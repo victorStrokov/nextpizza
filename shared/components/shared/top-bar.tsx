@@ -18,10 +18,14 @@ export const TopBar: React.FC<Props> = ({ categories, className }) => {
         'sticky top-0 bg-white py-5 shadow-lg shadow-black/5 z-10',
         className
       )}>
-      <Container className='flex items-center justify-between '>
-        <Categories items={categories} />
+      <Container className='flex flex-col sm:flex-row justify-between gap-4'>
+        <div className='overflow-x-auto'>
+          <Categories items={categories} />
+        </div>
         {/* items={categories} только те категории в которых есть продукты  */}
-        <SortPopup />
+        <div className='w-full sm:w-auto flex justify-end sm:justify-start'>
+          <SortPopup />
+        </div>
       </Container>
     </div>
   );

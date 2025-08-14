@@ -52,12 +52,15 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
       <div
         ref={ref} // отлавливаем клик на инпут
         className={cn(
-          'flex rounded-2xl flex-1 justify-between relative h-11 z-30',
+          'flex items-center justify-between relative z-30',
+          'h-10 sm:h-11 md:h-12',
+          'w-full sm:w-64 md:w-80 lg:w-96',
+          'rounded-2xl bg-gray-100 px-3',
           className
         )}>
-        <Search className='absolute top-1/2 translate-y-[-50%] left-3 h-5 text-gray-400' />
+        <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400' />
         <input
-          className='rounded-2xl outline-none w-full bg-gray-100 pl-11'
+          className='w-full pl-10 pr-3 bg-transparent outline-none text-sm sm:text-base'
           type='text'
           placeholder='Найти пиццу...'
           onFocus={() => setFocused(true)} // отлавливаем клик на инпут
@@ -68,9 +71,10 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
         {products.length > 0 && (
           <div
             className={cn(
-              'absolute w-full bg-white rounded-xl py-2 top-14 shadow-md transition-all duration-200 invisible opacity-0 z-30',
+              'absolute left-0 w-full bg-white rounded-xl py-2 shadow-md transition-all duration-200 invisible opacity-0 z-30',
+              'max-h-80 overflow-y-auto',
               // затемнение экрана при фокусе на инпут
-              focused && 'visible opacity-100 top-12' // АНИМАЦИЯ ПОПАП ПОИСКА СНИЗУ
+              focused && 'visible opacity-100 top-[calc(100%+8px)]' // АНИМАЦИЯ ПОПАП ПОИСКА СНИЗУ
             )}>
             {products.map((product) => (
               // рендер продуктов из поиска инпута
