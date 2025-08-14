@@ -4,6 +4,7 @@ import { Title } from './title';
 import { Button } from '../ui';
 import { Plus } from 'lucide-react';
 import { Ingredient } from '@prisma/client';
+import { cn } from '@/shared/lib/utils';
 
 interface Props {
   id: number;
@@ -23,11 +24,11 @@ export const ProductCard: React.FC<Props> = ({
   className,
 }) => {
   return (
-    <div className={className}>
+    <div className={cn('w-full max-w-sm mx-auto', className)}>
       <Link href={`/product/${id}`}>
-        <div className='flex justify-center p-6 bg-secondary rounded-lg h-[260px]'>
+        <div className='flex items-center justify-center p-6 bg-secondary rounded-lg h-[260px] overflow-hidden'>
           <img
-            className='w-[215px] h-[215px]'
+            className='object-contain w-full h-full max-w-[215px] max-h-[215px]'
             src={imageUrl}
             alt={name}
           />

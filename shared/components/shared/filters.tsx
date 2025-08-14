@@ -88,16 +88,19 @@ export const Filters: React.FC<Props> = ({ className }) => {
           />
         </div>
 
-        <RangeSlider
-          min={100}
-          max={1000}
-          step={10}
-          value={[
-            filters.prices.priceFrom || 100,
-            filters.prices.priceTo || 1000,
-          ]}
-          onValueChange={updatePrices} // onValueChange вернет массив из двух значений от и до и с помощью setPrice обновит стейт
-        />
+        <div className='relative w-full max-w-full px-2'>
+          <RangeSlider
+            className='min-w-[240px]'
+            min={100}
+            max={1000}
+            step={10}
+            value={[
+              filters.prices.priceFrom || 100,
+              filters.prices.priceTo || 1000,
+            ]}
+            onValueChange={updatePrices} // onValueChange вернет массив из двух значений от и до и с помощью setPrice обновит стейт
+          />
+        </div>
       </div>
 
       <CheckboxFiltersGroup

@@ -18,13 +18,17 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <head>
+        <meta
+          name='viewport'
+          content='width=device-width, initial-scale=1'
+        />
         <link
           data-rh='true'
           rel='icon'
           href='/logo.png'
         />
       </head>
-      <body className={nunito.className}>
+      <body className={`${nunito.className} bg-gray-50 text-gray-900`}>
         <Providers>{children}</Providers>
       </body>
     </html>
