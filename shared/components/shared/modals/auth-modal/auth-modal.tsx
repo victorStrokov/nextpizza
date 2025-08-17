@@ -1,7 +1,13 @@
 'use client';
 
 import { Button } from '@/shared/components/ui';
-import { Dialog, DialogContent } from '@/shared/components/ui/dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@/shared/components/ui/dialog';
 import { signIn } from 'next-auth/react';
 
 import React from 'react';
@@ -27,6 +33,18 @@ export const AuthModal: React.FC<Props> = ({ open, onClose }) => {
       open={open}
       onOpenChange={handleClose}>
       <DialogContent className='w-[450px] bg-white p-10'>
+        <VisuallyHidden>
+          <DialogTitle>
+            {type === 'login' ? 'Вход в аккаунт' : 'Регистрация'}
+          </DialogTitle>
+        </VisuallyHidden>
+        <VisuallyHidden>
+          <DialogDescription>
+            {type === 'login'
+              ? 'Введите свои данные для входа в аккаунт'
+              : 'Заполните форму, чтобы создать аккаунт'}
+          </DialogDescription>
+        </VisuallyHidden>
         {type === 'login' ? (
           <LoginForm onClose={handleClose} />
         ) : (

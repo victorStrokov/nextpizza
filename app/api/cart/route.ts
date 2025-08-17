@@ -6,20 +6,16 @@ import { CreateCartItemValues } from '@/shared/services/dto/cart.dto';
 import { updateCartTotalAmount } from '@/shared/lib/update-cart-total-amount';
 
 export async function GET(req: NextRequest) {
-  try {
-    const token = req.cookies.get('cartToken')?.value;
+  const token = req.cookies.get('cartToken')?.value;
 
-    if (!token) {
-      return NextResponse.json({ totalAmount: 0, items: [] }); // если нет токена, то возвращаем пустую корзину
-    }
+  if (!token) {
+    return NextResponse.json({ totalAmount: 0, items: [] }); // если нет токена, то возвращаем пустую корзину
+  }
+  try {
     // после получения информации о корзине возвращаем ее
     const userCart = await prisma.cart.findFirst({
       where: {
-        OR: [
-          {
-            token,
-          },
-        ],
+        token,
       },
       include: {
         // берем все товары из корзины
@@ -42,8 +38,8 @@ export async function GET(req: NextRequest) {
         },
       },
     });
-
-    return NextResponse.json(userCart);
+    const safeCart = userCart ?? { totalAmount: 0, items: [] };
+    return NextResponse.json(safeCart);
   } catch (error) {
     console.log('[CART_GET] Server error', error);
     return NextResponse.json(
@@ -99,8 +95,11 @@ export async function POST(req: NextRequest) {
         },
       });
     }
-
-    const updatedUserCart = await updateCartTotalAmount(token); // обновляем общую сумму корзины
+    // обновляем и страхуемся от null
+    const updatedUserCart = (await updateCartTotalAmount(token)) ?? {
+      totalAmount: 0,
+      items: [],
+    }; // обновляем общую сумму корзины
 
     const resp = NextResponse.json(updatedUserCart); // это действие вернет ответ пользователю с новой обновленной карзиной и новым токеном если у него его не было
     resp.cookies.set('cartToken', token);
