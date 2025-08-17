@@ -23,7 +23,6 @@ export const Filters: React.FC<Props> = ({ className }) => {
   })); // переводим в нужный формат данных с бэка ингредиенты
 
   const updatePrices = (prices: number[]) => {
-    console.log(prices, 'prices');
     filters.setPrices('priceFrom', prices[0]);
     filters.setPrices('priceTo', prices[1]);
   };

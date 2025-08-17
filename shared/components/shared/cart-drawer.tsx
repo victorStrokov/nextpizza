@@ -7,6 +7,7 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -21,6 +22,7 @@ import { PizzaSize, PizzaType } from '@/shared/constants/pizza';
 import { Title } from './title';
 import { cn } from '@/shared/lib/utils';
 import { useCart } from '@/shared/hooks';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { totalAmount, items, updateItemQuantity, removeCartItem } = useCart(); // получаем данные из хука useCart
@@ -41,21 +43,41 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
       <SheetTrigger asChild>{children}</SheetTrigger>
 
       <SheetContent className='flex flex-col justify-between pb-0 bg-[#F4F1EE]'>
-        <div
-          className={cn(
-            'flex flex-col h-full',
-            !totalAmount && 'justify-center'
-          )}>
-          {totalAmount > 0 && (
-            <SheetHeader>
+        {/* Заголовок всегда в DOM */}
+        <SheetHeader>
+          {totalAmount > 0 ? (
+            <>
               <SheetTitle>
                 <span className='font-bold'>
                   В корзине количество товаров {items.length}
                 </span>
               </SheetTitle>
-            </SheetHeader>
+              <VisuallyHidden>
+                <SheetDescription>
+                  Здесь вы можете просмотреть и изменить товары перед
+                  оформлением заказа
+                </SheetDescription>
+              </VisuallyHidden>
+            </>
+          ) : (
+            <>
+              <VisuallyHidden>
+                <SheetTitle>Корзина пустая</SheetTitle>
+              </VisuallyHidden>
+              <VisuallyHidden>
+                <SheetDescription>
+                  Добавьте хотя бы один товар, чтобы перейти к оформлению
+                </SheetDescription>
+              </VisuallyHidden>
+            </>
           )}
+        </SheetHeader>
 
+        <div
+          className={cn(
+            'flex flex-col h-full',
+            !totalAmount && 'justify-center'
+          )}>
           {!totalAmount && (
             <div className='flex flex-col items-center justify-center w-72 mx-auto'>
               <Image
@@ -70,11 +92,9 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                 className='text-center font-bold my-2'
               />
               <p className='text-center text-neutral-500 mb-5'>
-                Добавьте хотя бы одну пиццу, чтобы совершить заказ
+                Добавьте хотя бы один продукт, чтобы совершить заказ
               </p>
-
-              <SheetClose>
-                {/*  <SheetClose> Прекрутит onClick на кнопку  */}
+              <SheetClose asChild>
                 <Button
                   className='w-56 h-12 text-base'
                   size='lg'>
@@ -104,9 +124,9 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                       name={item.name}
                       price={item.price}
                       quantity={item.quantity}
-                      onClickCountButton={(type) => {
-                        onClickCountButton(item.id, item.quantity, type);
-                      }}
+                      onClickCountButton={(type) =>
+                        onClickCountButton(item.id, item.quantity, type)
+                      }
                       onClickRemove={() => removeCartItem(item.id)}
                     />
                   </div>
@@ -120,10 +140,8 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                       Итого
                       <div className='flex-1 border-b border-dashed border-b-neutral-200 relative -top-1 mx-2' />
                     </span>
-
                     <span className='font-bold text-lg'>{totalAmount} ₽</span>
                   </div>
-
                   <Link
                     href='/checkout'
                     passHref>

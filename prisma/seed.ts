@@ -146,73 +146,97 @@ async function up() {
     ],
   });
 
-  await prisma.cartItem.create({
-    // важно что тут один обьект без createMany и массива обьектов
-    data: {
-      productItemId: 1,
-      cartId: 1,
-      quantity: 2,
-      ingredients: {
-        connect: [{ id: 1 }, { id: 2 }, { id: 3 }],
-      },
-    },
-  });
-
+  // Превью историй (обложки)
   await prisma.story.createMany({
     data: [
       {
         previewImageUrl:
-          'https://cdn.inappstory.ru/story/xep/xzh/zmc/cr4gcw0aselwvf628pbmj3j/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAE&v=3101815496',
+          'https://cdn.inappstory.ru/story/7n9/ule/pc0/bhm7iabtgrn6vts4ivs91tn/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAEAQ&v=4289463770',
       },
       {
         previewImageUrl:
-          'https://cdn.inappstory.ru/story/km2/9gf/jrn/sb7ls1yj9fe5bwvuwgym73e/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAE&v=3074015640',
+          'https://cdn.inappstory.ru/story/u0f/5rs/dzw/wpo6ebzko4kbrn5ic81ztu0/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAEAQ&v=292540737',
       },
       {
         previewImageUrl:
-          'https://cdn.inappstory.ru/story/quw/acz/zf5/zu37vankpngyccqvgzbohj1/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAE&v=1336215020',
+          'https://cdn.inappstory.ru/story/wr6/bub/hou/xp0fpwep6h9hqvjld0xkbyl/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAEAQ&v=4162336677',
       },
       {
         previewImageUrl:
-          'https://cdn.inappstory.ru/story/7oc/5nf/ipn/oznceu2ywv82tdlnpwriyrq/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAE&v=38903958',
+          'https://cdn.inappstory.ru/story/oqx/jih/gbl/mtm3ggisy2c9mnza5evipag/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAEAQ&v=367060751',
       },
       {
         previewImageUrl:
-          'https://cdn.inappstory.ru/story/q0t/flg/0ph/xt67uw7kgqe9bag7spwkkyw/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAE&v=2941222737',
+          'https://cdn.inappstory.ru/story/bwk/kr4/552/ccl6vq3rws5p3zirycbqzaz/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAEAQ&v=121430243',
       },
       {
         previewImageUrl:
-          'https://cdn.inappstory.ru/story/lza/rsp/2gc/xrar8zdspl4saq4uajmso38/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAE&v=4207486284',
+          'https://cdn.inappstory.ru/story/sam/c6s/2lr/dxilnakqda6mdjfgii9llnb/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAEAQ&v=3003025662',
+      },
+      {
+        previewImageUrl:
+          'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQHZPf4VJ9unkrQ035S_sxnzpM4sXEW94Ss4Vi2jaOVvGtUUi9P',
       },
     ],
   });
 
+  // Слайды для историй
   await prisma.storyItem.createMany({
     data: [
+      // Story 1 — фото
       {
         storyId: 1,
         sourceUrl:
-          'https://cdn.inappstory.ru/file/dd/yj/sx/oqx9feuljibke3mknab7ilb35t.webp?k=IgAAAAAAAAAE',
+          'https://cdn.inappstory.ru/story/7n9/ule/pc0/bhm7iabtgrn6vts4ivs91tn/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAEAQ&v=4289463770',
+      },
+
+      // Story 2 — фото
+      {
+        storyId: 2,
+        sourceUrl:
+          'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQHB1WsClTuCzVHC0hXM2_mVlz1mtDMGCGWz2wuh927u2oKzd65',
       },
       {
-        storyId: 1,
+        storyId: 2,
         sourceUrl:
-          'https://cdn.inappstory.ru/file/jv/sb/fh/io7c5zarojdm7eus0trn7czdet.webp?k=IgAAAAAAAAAE',
+          'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRHIvE_O09kklun5HoMJpZ2Yk2QvTlCKhcvTedMnibxKV8Hhm4m',
+      },
+
+      // Story 3 — видео
+      {
+        storyId: 3,
+        sourceUrl:
+          'https://i.pinimg.com/736x/62/75/93/627593770a9dd1dd08c1d7984010f328.jpg',
+      },
+
+      // Story 4 — фото
+      {
+        storyId: 4,
+        sourceUrl:
+          'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcR2y5XU9Flpw6FW6uS76VZpQK1D1S7iXXBUiB6DJ--JnogOqRDk',
+      },
+
+      // Story 5 — видео
+      {
+        storyId: 5,
+        sourceUrl:
+          'https://cdn.inappstory.ru/story/bwk/kr4/552/ccl6vq3rws5p3zirycbqzaz/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAEAQ&v=121430243',
+      },
+      // Story 6 — фото
+      {
+        storyId: 6,
+        sourceUrl:
+          'https://cdn3.pepper.ru/topics/photos/612127/medium/image_picker_1AA04D5A-8D40-45A0-A88A-7CF1EAE6E661-10070-000005C9A136787E.jpg?1752937332',
       },
       {
-        storyId: 1,
+        storyId: 6,
         sourceUrl:
-          'https://cdn.inappstory.ru/file/ts/p9/vq/zktyxdxnjqbzufonxd8ffk44cb.webp?k=IgAAAAAAAAAE',
+          'https://cdn0.pepper.ru/attachments/photos/2390940/original/imagepicker701D6682-BF6D-4767-B980-B3762E8DEB35-10070-000005C9E355C9CA.jpg?1752917765',
       },
       {
-        storyId: 1,
+        storyId: 7,
         sourceUrl:
-          'https://cdn.inappstory.ru/file/ur/uq/le/9ufzwtpdjeekidqq04alfnxvu2.webp?k=IgAAAAAAAAAE',
-      },
-      {
-        storyId: 1,
-        sourceUrl:
-          'https://cdn.inappstory.ru/file/sy/vl/c7/uyqzmdojadcbw7o0a35ojxlcul.webp?k=IgAAAAAAAAAE',
+          'https://sun9-30.userapi.com/impg/eXhQJAXN2Jj2wO05A6vB-P0Sf3dvnPgHuLtiDA/cj64O1Wx-Ps.jpg?size=604x604&quality=95&sign=61181f486838fad2c59b2351a15094cb&type=album',
       },
     ],
   });
@@ -226,6 +250,8 @@ async function down() {
   await prisma.$executeRaw`TRUNCATE TABLE "Ingredient" RESTART IDENTITY CASCADE`;
   await prisma.$executeRaw`TRUNCATE TABLE "Product" RESTART IDENTITY CASCADE`;
   await prisma.$executeRaw`TRUNCATE TABLE "ProductItem" RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE TABLE "Story" RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE TABLE "StoryItem" RESTART IDENTITY CASCADE`;
 } // очищать данные
 
 async function main() {
