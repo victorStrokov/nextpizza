@@ -30,6 +30,7 @@ export const Header: React.FC<Props> = ({
   const searchParams = useSearchParams();
 
   React.useEffect(() => {
+    if (!searchParams || !router) return;
     let toastMessage = '';
 
     if (searchParams.has('paid')) {

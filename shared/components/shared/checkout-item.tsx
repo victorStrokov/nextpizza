@@ -27,24 +27,23 @@ export const CheckoutItem: React.FC<Props> = ({
   return (
     <div
       className={cn(
-        'flex items-center justify-between',
+        'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 border rounded-md bg-white',
         {
           'opacity-50 pointer-events-none': disabled, // pointer-events-none - убирает возможность кликать на элемент
         },
         className
       )}>
-      <div className='flex items-center gap-5 flex-1'>
+      <div className='flex items-start gap-4 flex-1'>
         <CartItemDetails.Image src={imageUrl} />
         <CartItemDetails.Info
-          className='flex-1'
+          className='flex-1 min-w-0'
           name={name}
           details={details}
         />
       </div>
+      <div className='flex items-center gap-3 sm:gap-5 flex-wrap sm:flex-nowrap justify-between sm:justify-end'>
+        <CartItemDetails.Price value={price} />
 
-      <CartItemDetails.Price value={price} />
-
-      <div className='flex items-center gap-5 ml-20'>
         <CartItemDetails.CountButton
           onClick={onClickCountButton}
           value={quantity}

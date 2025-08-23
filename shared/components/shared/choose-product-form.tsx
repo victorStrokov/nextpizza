@@ -24,27 +24,31 @@ export const ChooseProductForm: React.FC<Props> = ({
   loading,
 }) => {
   return (
-    <div className={cn(className, 'flex flex-1')}>
+    <div
+      className={cn(
+        className,
+        'flex flex-col lg:flex-row items-center gap-6 w-full'
+      )}>
       {/* верстка картнки продукта */}
-      <div className='flex items-center justify-center flex-1 relative w-full'>
+      <div className='w-full lg:w-[350px] flex justify-center'>
         <img
           src={imageUrl}
           alt={name}
-          className='relative left-2 top-2 transition-all z-10 duration-300 w-[350px] h-[350px]'
+          className='w-full max-w-[300px] h-auto object-cover rounded-md'
         />
       </div>
 
-      <div className='w-[490px] bg-[#f7f6f5] p-7'>
+      <div className='w-full lg:w-[490px] bg-[#f7f6f5] p-6 rounded-md'>
         <Title
           text={name}
           size='md'
-          className='font-extrabold mb-1'
+          className='font-extrabold mb-3 text-center lg:text-left'
         />
 
         <Button
           loading={loading}
           onClick={() => onSubmit?.()}
-          className='h-[55px] px-10 text-base rounded-[18px] w-full mt-10'>
+          className='h-[50px] px-6 text-base rounded-xl w-full mt-6'>
           Добавить в корзину за {price} ₽
         </Button>
       </div>

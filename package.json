@@ -51,6 +51,7 @@
     "react-insta-stories": "^2.8.0",
     "react-use": "^17.6.0",
     "resend": "^4.6.0",
+    "sharp": "^0.34.3",
     "stories-react": "^1.1.2",
     "swiper": "^11.2.10",
     "tailwind-merge": "^3.3.1",

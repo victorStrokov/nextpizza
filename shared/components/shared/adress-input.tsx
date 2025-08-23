@@ -8,7 +8,7 @@ interface Props {
   onChange?: (value?: string) => void;
 }
 
-export const AdressInput: React.FC<Props> = ({ onChange }) => {
+const AdressInput: React.FC<Props> = ({ onChange }) => {
   return (
     <AddressSuggestions
       token='357fcdfc92416460a13c6def8ddf41d802aba6e0'
@@ -16,3 +16,5 @@ export const AdressInput: React.FC<Props> = ({ onChange }) => {
     />
   );
 };
+
+export default AdressInput;
