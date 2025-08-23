@@ -4,8 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
-    const code = req.nextUrl.searchParams.get('code');
-    //const code = '';
+    // const code = req.nextUrl.searchParams.get('code');
+    const code = '';
     // если код не передан
     if (!code) {
       return NextResponse.json({ error: 'Код не верный' }, { status: 400 });

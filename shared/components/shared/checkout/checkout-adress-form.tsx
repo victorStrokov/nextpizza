@@ -2,11 +2,15 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 
-import { AdressInput } from '../adress-input';
 import { FormTextarea } from '../form';
 import { WhiteBlock } from '../white-block';
 import { ErrorText } from '../error-text';
 import { useFormContext } from 'react-hook-form';
+import dynamic from 'next/dynamic';
+
+const AdressInput = dynamic(() => import('../adress-input'), {
+  ssr: false,
+});
 
 interface Props {
   className?: string;

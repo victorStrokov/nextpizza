@@ -26,29 +26,33 @@ export const CartDrawerItem: React.FC<Props> = ({
   return (
     <div
       className={cn(
-        'flex bg-white p-5 gap-6',
+        'flex flex-col sm:flex-row bg-white p-4 sm:p-5 gap-4 sm:gap-6 rounded-md',
         {
           'opacity-50 pointer-events-none': disabled, // pointer-events-none - убирает возможность кликать на элемент
         },
         className
       )}>
-      <CartItem.Image src={imageUrl} />
+      <CartItem.Image
+        src={imageUrl}
+        className='w-20 h-20 object-cover rounded'
+      />
 
-      <div className='flex-1'>
+      <div className='flex flex-col flex-1 min-w-0'>
         <CartItem.Info
           name={name}
           details={details}
+          className='min-w-0 break-words'
         />
 
         <hr className='my-3' />
 
-        <div className='flex items-center justify-between'>
+        <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3'>
           <CountButton
             onClick={onClickCountButton} // при клике вызывается функция из родительского компонента
             value={quantity}
           />
 
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center justify-between sm:justify-end gap-3'>
             <CartItem.Price value={price} />
             <Trash2Icon
               onClick={onClickRemove}

@@ -70,20 +70,26 @@ export const Filters: React.FC<Props> = ({ className }) => {
             placeholder='0'
             min={100}
             max={1000}
-            value={String(filters.prices.priceFrom)}
-            onChange={(e) =>
-              filters.setPrices('priceFrom', Number(e.target.value))
-            }
+            value={String(filters.prices.priceFrom ?? '')}
+            onChange={(e) => {
+              const value = Number(e.target.value);
+              if (!isNaN(value)) {
+                filters.setPrices('priceFrom', value);
+              }
+            }}
           />
           <Input
             type='number'
             min={100}
             max={1000}
             placeholder='1000'
-            value={String(filters.prices.priceTo)}
-            onChange={(e) =>
-              filters.setPrices('priceTo', Number(e.target.value))
-            } // отлавливает изменение значений ползунков и инпута и обновляет стейт
+            value={String(filters.prices.priceTo ?? '')}
+            onChange={(e) => {
+              const value = Number(e.target.value);
+              if (!isNaN(value)) {
+                filters.setPrices('priceTo', value);
+              }
+            }} // отлавливает изменение значений ползунков и инпута и обновляет стейт
           />
         </div>
 
