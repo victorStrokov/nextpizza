@@ -1,12 +1,12 @@
 'use server';
 
 import { prisma } from '@/prisma/prisma-client';
-import { PayOrderTemplate } from '@/shared/components';
-import { VerificationUserTemplate } from '@/shared/components/shared/email-templates/verification-user';
-
+import { PayOrderTemplate } from '@/server/email-templates/pay-order';
+import { VerificationUserTemplate } from '@/server/email-templates/verification-user';
 import { CheckoutFormValues } from '@/shared/constants';
-import { createPayment, sendEmail } from '@/shared/lib';
+import { createPayment } from '@/shared/lib';
 import { getUserSession } from '@/shared/lib/get-user-sesion';
+import { sendEmail } from '@/server/send-email';
 import { OrderStatus, Prisma } from '@prisma/client';
 import { hashSync } from 'bcryptjs';
 import { cookies } from 'next/headers';
@@ -103,15 +103,20 @@ export async function createOrder(data: CheckoutFormValues) {
 
     const paymentUrl = paymentData.confirmation.confirmation_url; // ссылка для оплаты заказа
 
-    await sendEmail(
-      data.email,
-      'Next Pizza / Оплатите заказ No' + order.id,
-      PayOrderTemplate({
-        orderId: order.id,
-        totalAmount: order.totalAmount,
-        paymentUrl, // ссылка для оплаты заказа
-      })
-    );
+    try {
+      await sendEmail(
+        // 'strokof2@gmail.com', // Временный email для тестов
+        data.email,
+        'Next Pizza / Оплатите заказ No' + order.id,
+        PayOrderTemplate({
+          orderId: order.id,
+          totalAmount: order.totalAmount,
+          paymentUrl, // ссылка для оплаты заказа
+        })
+      );
+    } catch (error) {
+      console.error('Failed to send email in createOrder:', error);
+    }
 
     return paymentUrl; // возвращаем ссылку для оплаты заказа
   } catch (error) {
@@ -187,11 +192,15 @@ export async function registerUser(body: Prisma.UserCreateInput) {
       },
     });
 
-    await sendEmail(
-      createdUser.email,
-      'Next Pizza / Подтверждение регистрации',
-      VerificationUserTemplate({ code })
-    );
+    try {
+      await sendEmail(
+        createdUser.email,
+        'Next Pizza / Подтверждение регистрации',
+        VerificationUserTemplate({ code })
+      );
+    } catch (error) {
+      console.error('Failed to send email in registerUser:', error);
+    }
   } catch (error) {
     console.log('Error [REGISTER_USER]', error);
     throw error;

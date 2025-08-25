@@ -1,7 +1,8 @@
 import { PaymentCallBackData } from '@/@types/yookassa';
 import { prisma } from '@/prisma/prisma-client';
-import { OrderSuccessTemplate } from '@/shared/components/shared/email-templates/order-success';
-import { sendEmail } from '@/shared/lib';
+import { OrderSuccessTemplate } from '@/server/email-templates/order-success';
+import { sendEmail } from '@/server/send-email';
+
 import { CartItemDTO } from '@/shared/services/dto/cart.dto';
 import { OrderStatus } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
@@ -42,15 +43,23 @@ export async function POST(req: NextRequest) {
 
     // Отправляем письмо с подтверждением заказа
     if (isSucceeded) {
-      await sendEmail(
-        order.email,
-        'Next Pizza | Ваш заказ успешно оформлен',
-        OrderSuccessTemplate({
-          orderId: order.id,
-          items,
-          totalAmount: order.totalAmount,
-        })
-      );
+      console.log(order.email);
+      const { html, text } = OrderSuccessTemplate({
+        orderId: order.id,
+        items,
+        totalAmount: order.totalAmount,
+      });
+
+      try {
+        await sendEmail(
+          order.email,
+          'Next Pizza | Ваш заказ успешно оформлен',
+          html,
+          text
+        );
+      } catch (error) {
+        console.error('Email send failed:', error);
+      }
     } else {
       // Если платеж не прошел, можно отправить уведомление об этом
     }
@@ -66,9 +75,4 @@ export async function POST(req: NextRequest) {
 }
 // TODO: Добавим сохранение логов вебхуков
 
-// Или прикрутим отображение статуса заказа на фронте
-
-// А может, попробуем сделать Telegram-уведомления о новых заказах
-// Когда захочешь замутить автозапуск или настроить Yookassa API на обновление ссылки автоматически — просто напиши, я тебе помогу это собрать как часы. ⏱
-
-// А пока что — может, хочешь прикрутить отображение статуса заказа на фронте? Или Telegram-оповещение админке, когда кто-то заказывает пиццу? 🍕 Или просто кофе попить и насладиться тем, что всё работает
+//прикрутим отображение статуса заказа на фронте
