@@ -29,7 +29,7 @@ export { InfoBlock } from './info-block';
 export { ProfileForm } from './profile-form';
 export { Stories } from './stories';
 
-export * from './email-templates';
+export * from '../../../server/email-templates';
 export * from './checkout';
 export * from './form';
 export * from './modals';
