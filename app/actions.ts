@@ -102,17 +102,18 @@ export async function createOrder(data: CheckoutFormValues) {
     });
 
     const paymentUrl = paymentData.confirmation.confirmation_url; // ссылка для оплаты заказа
-
+    const { html, text } = PayOrderTemplate({
+      orderId: order.id,
+      totalAmount: order.totalAmount,
+      paymentUrl, // ссылка для оплаты заказа
+    });
     try {
       await sendEmail(
         // 'strokof2@gmail.com', // Временный email для тестов
         data.email,
         'Next Pizza / Оплатите заказ No' + order.id,
-        PayOrderTemplate({
-          orderId: order.id,
-          totalAmount: order.totalAmount,
-          paymentUrl, // ссылка для оплаты заказа
-        })
+        html,
+        text
       );
     } catch (error) {
       console.error('Failed to send email in createOrder:', error);

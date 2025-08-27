@@ -11,7 +11,10 @@ export async function POST(req: NextRequest) {
   try {
     // ВЫТАСКИВАЕМ ДАННЫЕ ИЗ ЗАПРОСА
     const body = (await req.json()) as PaymentCallBackData;
-    console.log('Webhook body:', body); // Логируем тело запроса для отладки
+    console.log('🔥 Webhook вызван');
+    console.log('📦 Статус из webhook:', body.object.status);
+    console.log('🔍 Ищем заказ по ID:', body.object.metadata.order_id);
+    // Логируем тело запроса для отладки
     // Ищем заказ и меняем его статус и кому принадлежит
     const order = await prisma.order.findFirst({
       where: {
@@ -26,8 +29,8 @@ export async function POST(req: NextRequest) {
     if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
-
     const isSucceeded = body.object.status === 'succeeded'; // проверяем статус платежа
+    console.log('✅ Статус платежа:', body.object.status);
 
     // когда заказ найден проверяем статус платежа
     await prisma.order.update({
@@ -51,6 +54,10 @@ export async function POST(req: NextRequest) {
       });
 
       try {
+        console.log(
+          '📤 Отправляем письмо подтверждения оплаты на:',
+          order.email
+        );
         await sendEmail(
           order.email,
           'Next Pizza | Ваш заказ успешно оформлен',
